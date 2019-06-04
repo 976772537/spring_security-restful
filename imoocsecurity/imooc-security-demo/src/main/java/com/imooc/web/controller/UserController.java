@@ -2,6 +2,9 @@ package com.imooc.web.controller;
 
 import com.imooc.web.dto.User;
 import com.imooc.web.dto.UserQueryCondition;
+import com.imooc.web.exception.UserNotExistException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -54,15 +57,17 @@ public class UserController {
 
 //    @JsonView(User.UserDetailView.class)
     @GetMapping(value = "/{id:\\d+}")
-    public User getInfo(@PathVariable String id){
-        log.info ("id : {}",id);
+    public User getInfo(@PathVariable @ApiParam(value = "用戶id") String id){
+        log.info ("进入getInfo服务 ,id : {}",id);
         return User.builder ().Username ("tom").build ();
     }
 
     @PostMapping
+    @ApiOperation (value = "用戶創建服務")
     public User create(@Valid @RequestBody User user , BindingResult errors){
         return getUser (user, errors);
     }
+
     @PutMapping("/{id:\\d+}")
     public User update(@Valid @RequestBody User user , BindingResult errors){
         return getUser (user, errors);
@@ -74,10 +79,14 @@ public class UserController {
     }
     private User getUser(@RequestBody @Valid User user, BindingResult errors) {
         if(errors.hasErrors ()){
-            errors.getAllErrors ().forEach (e -> log.info ("error : {} ",e.getDefaultMessage ()));
+            errors.getAllErrors ().forEach (e -> log.info (".error : {} ",e.getDefaultMessage ()));
         }
         log.info ("User : {}",user);
         return user;
     }
 
+    @GetMapping(value = "/error")
+    public void getError(){
+        throw new UserNotExistException ("1");
+    }
 }
