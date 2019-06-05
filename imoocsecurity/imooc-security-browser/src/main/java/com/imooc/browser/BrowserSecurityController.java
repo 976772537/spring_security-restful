@@ -30,11 +30,11 @@ public class BrowserSecurityController {
     @Autowired
     private SecurityProperties securityProperties;
 
+
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     @RequestMapping("/authentication/require")
     public SimpleResponse requireAuthentication(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         SavedRequest savedRequest = requestCache.getRequest (req,resp);
-
         if(savedRequest != null){
             String targetUrl = savedRequest.getRedirectUrl ();
             log.info ("引发跳转的请求是： {}"+targetUrl);

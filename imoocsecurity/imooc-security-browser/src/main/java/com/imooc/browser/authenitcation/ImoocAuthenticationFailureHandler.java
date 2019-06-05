@@ -1,5 +1,6 @@
 package com.imooc.browser.authenitcation;
 
+import com.imooc.browser.support.SimpleResponse;
 import com.imooc.security.LoginType;
 import com.imooc.security.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class ImoocAuthenticationFailureHandler extends SimpleUrlAuthenticationFa
         if(LoginType.JSON.equals (securityProperties.getBrowser ().getLoginType ())) {
             httpServletResponse.setStatus (HttpStatus.INTERNAL_SERVER_ERROR.value ());
             httpServletResponse.setContentType ("application/json;charset=UTF-8");
-            httpServletResponse.getWriter ().write (objectMapper.writeValueAsString (e));
+            httpServletResponse.getWriter ().write (objectMapper.writeValueAsString (new SimpleResponse (e.getMessage ())));
         }else {
             super.onAuthenticationFailure (httpServletRequest,httpServletResponse,e);
         }
